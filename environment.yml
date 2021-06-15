@@ -1,0 +1,13 @@
+name: wscats
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8.6
+  - django=3.2.4
+  - pytango=9.3.3
+  - black=21.5b2
+  - pip=21.1.1
+  - pip:
+    # does not work installing via conda due to issues with daphne (WSGI3?!)
+    - channels==3.0.3
+

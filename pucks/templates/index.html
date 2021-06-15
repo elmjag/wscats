@@ -1,0 +1,461 @@
+<html>
+<head>
+<title>ISARA Sample Changer</title>
+<style>
+.wrapper
+{
+  display: grid;
+  grid-template-columns: 120px 1fr 120px;
+  grid-template-rows: 120px 1fr 120px;
+}
+
+.middle
+{
+  grid-column-start: 2;
+  grid-row-start: 2;
+
+  margin: auto;
+  vertical-align: middle;
+}
+
+.circle
+{
+  width: 530px;
+  height: 530px;
+  border: solid 3px;
+  border-radius: 50%;
+  display: grid;
+  grid-template-rows: 80px repeat(12, 1fr) 40px;
+  grid-template-columns: 60px repeat(12, 1fr) 60px;
+}
+
+.cell-wrapper
+{
+  display: grid;
+  grid-template-rows: 2px 1fr 2px;
+  grid-template-columns: 2px 1fr 2px;
+
+  width: 94%;
+}
+
+.puck-free
+{
+  background-color: #8abf26;
+}
+
+.puck-occupied
+{
+  background-color: #feb627;
+}
+
+.cell
+{
+  border: solid 1px;
+  border-radius: 50%;
+
+
+  grid-column-start: 2;
+  grid-row-start: 2;
+
+  text-align: center;
+
+  padding: 20px;
+}
+
+.r1c1
+{
+  grid-column: 3 / 5;
+  grid-row: 2 / 4;
+}
+
+.r1c2
+{
+  grid-column: 5 / 7;
+  grid-row: 2 / 4;
+}
+
+.r1c3
+{
+  grid-column: 7 / 9;
+  grid-row: 2 / 4;
+}
+
+
+.r1c4
+{
+  grid-column: 9 / 11;
+  grid-row: 2 / 4;
+}
+
+.r1c5
+{
+  grid-column: 11 / 13;
+  grid-row: 2 / 4;
+}
+
+.r2c1
+{
+  grid-column: 2 / 4;
+  grid-row: 4 / 6;
+}
+
+.r2c2
+{
+  grid-column: 4 / 6;
+  grid-row: 4 / 6;
+}
+
+.r2c3
+{
+  grid-column: 6 / 8;
+  grid-row: 4 / 6;
+}
+
+.r2c4
+{
+  grid-column: 8 / 10;
+  grid-row: 4 / 6;
+}
+
+.r2c5
+{
+  grid-column: 10 / 12;
+  grid-row: 4 / 6;
+}
+
+.r2c6
+{
+  grid-column: 12 / 14;
+  grid-row: 4 / 6;
+}
+
+.r3c1
+{
+  grid-column: 3 / 5;
+  grid-row: 6 / 8;
+}
+
+.r3c2
+{
+  grid-column: 5 / 7;
+  grid-row: 6 / 8;
+}
+
+.r3c3
+{
+  grid-column: 7 / 9;
+  grid-row: 6 / 8;
+}
+
+.r3c4
+{
+  grid-column: 9 / 11;
+  grid-row: 6 / 8;
+}
+
+.r3c5
+{
+  grid-column: 11 / 13;
+  grid-row: 6 / 8;
+}
+
+.r4c1
+{
+  grid-column: 2 / 4;
+  grid-row: 8 / 10;
+}
+
+.r4c2
+{
+  grid-column: 4 / 6;
+  grid-row: 8 / 10;
+}
+
+.r4c3
+{
+  grid-column: 6 / 8;
+  grid-row: 8 / 10;
+}
+
+.r4c4
+{
+  grid-column: 8 / 10;
+  grid-row: 8 / 10;
+}
+
+.r4c5
+{
+  grid-column: 10 / 12;
+  grid-row: 8 / 10;
+}
+
+.r4c6
+{
+  grid-column: 12 / 14;
+  grid-row: 8 / 10;
+}
+
+.r5c1
+{
+  grid-column: 3 / 5;
+  grid-row: 10 / 12;
+}
+
+.r5c2
+{
+  grid-column: 5 / 7;
+  grid-row: 10 / 12;
+}
+
+.r5c3
+{
+  grid-column: 7 / 9;
+  grid-row: 10 / 12;
+}
+
+.r5c4
+{
+  grid-column: 9 / 11;
+  grid-row: 10 / 12;
+}
+
+.r5c5
+{
+  grid-column: 11 / 13;
+  grid-row: 10 / 12;
+}
+
+.r6c1
+{
+  grid-column: 6 / 8;
+  grid-row: 12 / 14;
+}
+
+.r6c2
+{
+  grid-column: 8 / 10;
+  grid-row: 12 / 14;
+}
+
+</style>
+<script>
+var toggle = true;
+
+function ws_message(e)
+{
+    let puck_present = JSON.parse(e.data)["pucks"];
+
+    for (var i = 1; i <= puck_present.length; i += 1)
+    {
+        let puck = document.getElementById(`puck-${i}`);
+        if (puck_present[i-1])
+        {
+            puck.classList.remove("puck-free");
+            puck.classList.add("puck-occupied");
+        }
+        else
+        {
+            puck.classList.remove("puck-occupied");
+            puck.classList.add("puck-free");
+        }
+
+        }
+}
+
+function init_websocket()
+{
+    const sock = new WebSocket(`ws://${window.location.host}/ws/pucks`);
+    sock.onmessage = ws_message;
+}
+
+init_websocket();
+
+</script>
+</head>
+
+<body>
+<div class="wrapper">
+
+    <div class="middle">
+        <div class="circle">
+            <div class="r1c1">
+                <div class="cell-wrapper">
+                    <div id="puck-1" class="cell">1</div>
+                </div>
+            </div>
+
+            <div class="r1c2">
+                <div class="cell-wrapper">
+                    <div id="puck-2" class="cell">2</div>
+                </div>
+            </div>
+
+            <div class="r1c3">
+                <div class="cell-wrapper">
+                    <div id="puck-3" class="cell">3</div>
+                </div>
+            </div>
+
+            <div class="r1c4">
+                <div class="cell-wrapper">
+                    <div id="puck-4" class="cell">4</div>
+                </div>
+            </div>
+
+            <div class="r1c5">
+                <div class="cell-wrapper">
+                    <div id="puck-5" class="cell">5</div>
+                </div>
+            </div>
+
+            <div class="r2c1">
+                <div class="cell-wrapper">
+                    <div id="puck-6" class="cell">6</div>
+                </div>
+            </div>
+
+            <div class="r2c2">
+                <div class="cell-wrapper">
+                    <div id="puck-7" class="cell">7</div>
+                </div>
+            </div>
+
+            <div class="r2c3">
+                <div class="cell-wrapper">
+                    <div id="puck-8" class="cell">8</div>
+                </div>
+            </div>
+
+            <div class="r2c4">
+                <div class="cell-wrapper">
+                    <div id="puck-9" class="cell">9</div>
+                </div>
+            </div>
+
+            <div class="r2c5">
+                <div class="cell-wrapper">
+                    <div id="puck-10" class="cell">10</div>
+                </div>
+            </div>
+
+            <div class="r2c6">
+                <div class="cell-wrapper">
+                    <div id="puck-11" class="cell">11</div>
+                </div>
+            </div>
+
+            <div class="r3c1">
+                <div class="cell-wrapper">
+                    <div id="puck-12" class="cell">12</div>
+                </div>
+            </div>
+
+            <div class="r3c2">
+                <div class="cell-wrapper">
+                    <div id="puck-13" class="cell">13</div>
+                </div>
+            </div>
+
+            <div class="r3c3">
+                <div class="cell-wrapper">
+                    <div id="puck-14" class="cell">14</div>
+                </div>
+            </div>
+
+            <div class="r3c4">
+                <div class="cell-wrapper">
+                    <div id="puck-15" class="cell">15</div>
+                </div>
+            </div>
+
+            <div class="r3c5">
+                <div class="cell-wrapper">
+                    <div id="puck-16" class="cell">16</div>
+                </div>
+            </div>
+
+            <div class="r4c1">
+                <div class="cell-wrapper">
+                    <div id="puck-17" class="cell">17</div>
+                </div>
+            </div>
+
+            <div class="r4c2">
+                <div class="cell-wrapper">
+                    <div id="puck-18" class="cell">18</div>
+                </div>
+            </div>
+
+            <div class="r4c3">
+                <div class="cell-wrapper">
+                    <div id="puck-19" class="cell">19</div>
+                </div>
+            </div>
+
+            <div class="r4c4">
+                <div class="cell-wrapper">
+                    <div id="puck-20" class="cell">20</div>
+                </div>
+            </div>
+
+            <div class="r4c5">
+                <div class="cell-wrapper">
+                    <div id="puck-21" class="cell">21</div>
+                </div>
+            </div>
+
+            <div class="r4c6">
+                <div class="cell-wrapper">
+                    <div id="puck-22" class="cell">22</div>
+                </div>
+            </div>
+
+            <div class="r5c1">
+                <div class="cell-wrapper">
+                    <div id="puck-23" class="cell">23</div>
+                </div>
+            </div>
+
+            <div class="r5c2">
+                <div class="cell-wrapper">
+                    <div id="puck-24" class="cell">24</div>
+                </div>
+            </div>
+
+            <div class="r5c3">
+                <div class="cell-wrapper">
+                    <div id="puck-25" class="cell">25</div>
+                </div>
+            </div>
+
+            <div class="r5c4">
+                <div class="cell-wrapper">
+                    <div id="puck-26" class="cell">26</div>
+                </div>
+            </div>
+
+            <div class="r5c5">
+                <div class="cell-wrapper">
+                    <div id="puck-27" class="cell">27</div>
+                </div>
+            </div>
+
+
+            <div class="r6c1">
+                <div class="cell-wrapper">
+                    <div id="puck-28" class="cell">28</div>
+                </div>
+            </div>
+
+            <div class="r6c2">
+                <div class="cell-wrapper">
+                    <div id="puck-29" class="cell">29</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
