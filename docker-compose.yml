@@ -1,0 +1,8 @@
+version: '3'
+services:
+  wscats:
+    image: wscats
+    network_mode: "host"
+    environment:
+      - TANGO_HOST=localhost:10000
+      - PYTHONUNBUFFERED=1
